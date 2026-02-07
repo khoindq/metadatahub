@@ -1,0 +1,471 @@
+{
+  "version": "2.0",
+  "description": "Comprehensive ground truth for RAG system benchmarking - MetadataHub vs LlamaIndex vs LangChain",
+  "queries": [
+    {
+      "id": "fin_01",
+      "query": "What is the Q3 2024 total revenue?",
+      "query_vi": "Doanh thu tổng Q3 2024 là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["$45.2 million", "45.2M"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "fin_02",
+      "query": "What was the YoY revenue growth for Asia Pacific region?",
+      "query_vi": "Tăng trưởng doanh thu so với cùng kỳ của khu vực Châu Á Thái Bình Dương là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["27.9%", "27.9"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_03",
+      "query": "How much is the Engineering department's total budget allocation?",
+      "query_vi": "Tổng ngân sách được phân bổ cho phòng Kỹ thuật là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["budget_summary.md"],
+      "expected_answer_contains": ["$41.5M", "41.5"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "fin_04",
+      "query": "What is the cloud services ARR?",
+      "query_vi": "ARR của dịch vụ cloud là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["$113.6 million", "113.6"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_05",
+      "query": "What were the total January 2024 expenses?",
+      "query_vi": "Tổng chi phí tháng 1 năm 2024 là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["expense_report_jan.md"],
+      "expected_answer_contains": ["$8,234,567", "8234567"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "fin_06",
+      "query": "Which vendor had the highest spending in January?",
+      "query_vi": "Nhà cung cấp nào có chi tiêu cao nhất trong tháng 1?",
+      "category": "financial",
+      "expected_sources": ["expense_report_jan.md"],
+      "expected_answer_contains": ["Amazon Web Services", "AWS"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_07",
+      "query": "What is the gross margin percentage for Q3 2024?",
+      "query_vi": "Tỷ lệ biên lợi nhuận gộp Q3 2024 là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["72.3%", "72.3"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "fin_08",
+      "query": "How much budget remains for Marketing Campaigns?",
+      "query_vi": "Còn bao nhiêu ngân sách cho các chiến dịch Marketing?",
+      "category": "financial",
+      "expected_sources": ["budget_summary.md"],
+      "expected_answer_contains": ["$4.3M", "4.3"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_09",
+      "query": "What are the risk factors mentioned in Q3 report?",
+      "query_vi": "Các yếu tố rủi ro được đề cập trong báo cáo Q3 là gì?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["Currency", "Competitive", "Economic"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "fin_10",
+      "query": "What is the expected Q4 2024 revenue guidance?",
+      "query_vi": "Dự báo doanh thu Q4 2024 là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["$48-50 million", "48", "50"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_11",
+      "query": "How much was spent on cloud infrastructure in January?",
+      "query_vi": "Chi bao nhiêu cho hạ tầng cloud trong tháng 1?",
+      "category": "financial",
+      "expected_sources": ["expense_report_jan.md"],
+      "expected_answer_contains": ["AWS", "GCP", "567,890", "234,567"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_12",
+      "query": "What is the customer churn rate for cloud services?",
+      "query_vi": "Tỷ lệ rời bỏ khách hàng của dịch vụ cloud là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["q3_revenue_report.md"],
+      "expected_answer_contains": ["2.1%", "2.1"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "fin_13",
+      "query": "What are the CapEx projects and their status?",
+      "query_vi": "Các dự án CapEx và tình trạng của chúng là gì?",
+      "category": "financial",
+      "expected_sources": ["budget_summary.md"],
+      "expected_answer_contains": ["Data Center", "Office Renovation", "Singapore"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "fin_14",
+      "query": "Compare personnel costs vs operating expenses in January",
+      "query_vi": "So sánh chi phí nhân sự và chi phí vận hành trong tháng 1",
+      "category": "financial",
+      "expected_sources": ["expense_report_jan.md"],
+      "expected_answer_contains": ["$5,123,456", "$1,876,543", "62.2%", "22.8%"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "fin_15",
+      "query": "What is the budget approval process for amounts over $100K?",
+      "query_vi": "Quy trình phê duyệt ngân sách cho các khoản trên $100K là gì?",
+      "category": "financial",
+      "expected_sources": ["budget_summary.md"],
+      "expected_answer_contains": ["VP approval", "CFO"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "code_01",
+      "query": "What does the PasswordHasher class do?",
+      "query_vi": "Class PasswordHasher làm gì?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["hash", "password", "PBKDF2"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_02",
+      "query": "How is token expiration handled in the auth service?",
+      "query_vi": "Hết hạn token được xử lý như thế nào trong auth service?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["is_expired", "expires_at", "TokenExpiredError"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_03",
+      "query": "What are the user roles defined in the system?",
+      "query_vi": "Các vai trò người dùng được định nghĩa trong hệ thống là gì?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["GUEST", "USER", "EDITOR", "ADMIN", "SUPER_ADMIN"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_04",
+      "query": "How does the DataValidator validate email addresses?",
+      "query_vi": "DataValidator xác thực địa chỉ email như thế nào?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["regex", "pattern", "@"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_05",
+      "query": "What is the DataPipeline class and how does it work?",
+      "query_vi": "Class DataPipeline là gì và hoạt động như thế nào?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["pipeline", "steps", "transform", "process"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_06",
+      "query": "Find the function that refreshes authentication tokens",
+      "query_vi": "Tìm hàm làm mới token xác thực",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["refresh_token", "TokenManager"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_07",
+      "query": "How does the system handle CSV file processing?",
+      "query_vi": "Hệ thống xử lý file CSV như thế nào?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["CSVProcessor", "read_file", "DictReader"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_08",
+      "query": "What exceptions are defined for authentication errors?",
+      "query_vi": "Những exception nào được định nghĩa cho lỗi xác thực?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["AuthError", "InvalidCredentialsError", "TokenExpiredError", "PermissionDeniedError"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_09",
+      "query": "How is password hashing implemented?",
+      "query_vi": "Password hashing được triển khai như thế nào?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["pbkdf2_hmac", "salt", "iterations", "ALGORITHM"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "code_10",
+      "query": "What does the DataAggregator class provide?",
+      "query_vi": "Class DataAggregator cung cấp những gì?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["aggregate", "sum", "average", "group_by"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_11",
+      "query": "How do you create a new user using the AuthService?",
+      "query_vi": "Làm thế nào để tạo người dùng mới bằng AuthService?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["register_user", "email", "username", "password"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_12",
+      "query": "What validation rules are available as built-in validators?",
+      "query_vi": "Những quy tắc xác thực nào có sẵn như validator tích hợp?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["email", "phone", "url", "date", "positive_number"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_13",
+      "query": "How does the require_auth decorator work?",
+      "query_vi": "Decorator require_auth hoạt động như thế nào?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["decorator", "permission", "role", "authorize"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "code_14",
+      "query": "What is the ProcessingStats dataclass used for?",
+      "query_vi": "ProcessingStats dataclass được sử dụng để làm gì?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["statistics", "total_records", "processed_records", "failed_records"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_15",
+      "query": "How does the FieldTransformer apply transformations?",
+      "query_vi": "FieldTransformer áp dụng các biến đổi như thế nào?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["transform", "field", "add_transformation"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_16",
+      "query": "Find the User dataclass and its attributes",
+      "query_vi": "Tìm User dataclass và các thuộc tính của nó",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["user_id", "email", "username", "role", "permissions"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "code_17",
+      "query": "How does process_stream work in DataPipeline?",
+      "query_vi": "process_stream hoạt động như thế nào trong DataPipeline?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["Generator", "yield", "Iterator", "ProcessingStats"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "code_18",
+      "query": "What methods does TokenManager provide?",
+      "query_vi": "TokenManager cung cấp những phương thức nào?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["create_token", "validate_token", "refresh_token", "revoke_token"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_19",
+      "query": "How is JSON and JSONL file processing handled?",
+      "query_vi": "Xử lý file JSON và JSONL được thực hiện như thế nào?",
+      "category": "code",
+      "expected_sources": ["data_processor.py"],
+      "expected_answer_contains": ["JSONProcessor", "read_json", "read_jsonl", "write_jsonl"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "code_20",
+      "query": "What is the role hierarchy in authentication?",
+      "query_vi": "Phân cấp vai trò trong xác thực là gì?",
+      "category": "code",
+      "expected_sources": ["auth_service.py"],
+      "expected_answer_contains": ["role_hierarchy", "GUEST", "SUPER_ADMIN", "has_role"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "doc_01",
+      "query": "What are the minimum system requirements?",
+      "query_vi": "Yêu cầu hệ thống tối thiểu là gì?",
+      "category": "documentation",
+      "expected_sources": ["installation_guide.md"],
+      "expected_answer_contains": ["2 cores", "4 GB", "20 GB", "Python 3.10"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "doc_02",
+      "query": "How do I create a virtual environment and install dependencies?",
+      "query_vi": "Làm thế nào để tạo virtual environment và cài đặt dependencies?",
+      "category": "documentation",
+      "expected_sources": ["installation_guide.md"],
+      "expected_answer_contains": ["python -m venv", "pip install", "requirements.txt"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "doc_03",
+      "query": "What API endpoints are available for user management?",
+      "query_vi": "Những API endpoint nào có sẵn cho quản lý người dùng?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["/users", "GET", "POST", "PATCH", "DELETE"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "doc_04",
+      "query": "How does the system architecture handle scaling?",
+      "query_vi": "Kiến trúc hệ thống xử lý việc mở rộng như thế nào?",
+      "category": "documentation",
+      "expected_sources": ["architecture.md"],
+      "expected_answer_contains": ["horizontal", "instances", "auto-scaling", "CPU"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_05",
+      "query": "What is the rate limiting policy for the API?",
+      "query_vi": "Chính sách giới hạn tốc độ cho API là gì?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["rate", "requests/minute", "Free", "Pro", "Enterprise"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_06",
+      "query": "How do I authenticate API requests?",
+      "query_vi": "Làm thế nào để xác thực các yêu cầu API?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["Bearer", "token", "Authorization", "/auth/token"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "doc_07",
+      "query": "What microservices make up the platform?",
+      "query_vi": "Những microservice nào tạo nên nền tảng?",
+      "category": "documentation",
+      "expected_sources": ["architecture.md"],
+      "expected_answer_contains": ["Auth", "User", "Document", "Search", "Analytics"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_08",
+      "query": "How do I set up webhooks to receive notifications?",
+      "query_vi": "Làm thế nào để thiết lập webhook để nhận thông báo?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["webhook", "POST /webhooks", "events", "url"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_09",
+      "query": "What is the disaster recovery strategy?",
+      "query_vi": "Chiến lược khắc phục thảm họa là gì?",
+      "category": "documentation",
+      "expected_sources": ["architecture.md"],
+      "expected_answer_contains": ["backup", "RPO", "RTO", "failover"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "doc_10",
+      "query": "What environment variables need to be configured?",
+      "query_vi": "Những biến môi trường nào cần được cấu hình?",
+      "category": "documentation",
+      "expected_sources": ["installation_guide.md"],
+      "expected_answer_contains": ["TECHCORP_HOME", "TECHCORP_ENV", "TECHCORP_API_KEY"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "doc_11",
+      "query": "How does the document upload flow work?",
+      "query_vi": "Luồng tải lên tài liệu hoạt động như thế nào?",
+      "category": "documentation",
+      "expected_sources": ["architecture.md"],
+      "expected_answer_contains": ["upload", "S3", "PostgreSQL", "Elasticsearch", "Kafka"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "doc_12",
+      "query": "What error codes can the API return?",
+      "query_vi": "API có thể trả về những mã lỗi nào?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["400", "401", "403", "404", "429", "500"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_13",
+      "query": "How do I troubleshoot port already in use error?",
+      "query_vi": "Làm thế nào để khắc phục lỗi cổng đã được sử dụng?",
+      "category": "documentation",
+      "expected_sources": ["installation_guide.md"],
+      "expected_answer_contains": ["lsof", "kill", "port", "8081"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_14",
+      "query": "What monitoring and observability tools are used?",
+      "query_vi": "Những công cụ giám sát và quan sát nào được sử dụng?",
+      "category": "documentation",
+      "expected_sources": ["architecture.md"],
+      "expected_answer_contains": ["Prometheus", "ELK", "Jaeger", "PagerDuty"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "doc_15",
+      "query": "What SDKs are available for the API?",
+      "query_vi": "Những SDK nào có sẵn cho API?",
+      "category": "documentation",
+      "expected_sources": ["api_reference.md"],
+      "expected_answer_contains": ["Python", "JavaScript", "Go", "Ruby"],
+      "difficulty": "easy"
+    }
+  ],
+  "metadata": {
+    "created": "2024-10-25",
+    "total_queries": 50,
+    "categories": {
+      "financial": 15,
+      "code": 20,
+      "documentation": 15
+    },
+    "languages": ["en", "vi"],
+    "difficulty_distribution": {
+      "easy": 16,
+      "medium": 24,
+      "hard": 10
+    }
+  }
+}

@@ -17,3 +17,5 @@ demo_store/
 *.pyc
 __pycache__/
 .DS_Store
+benchmark/results/*.json
+benchmark/results/*.md
