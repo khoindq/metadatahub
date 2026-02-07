@@ -15,8 +15,31 @@ Your Files → Ingest → [Vector Index + Tree Index] → Search → Answers
 - **🔍 Semantic Search** - Find relevant documents using natural language
 - **🌳 Tree Navigation** - Browse document structure (sections, sheets, symbols)
 - **📄 Multi-format Support** - PDF, XLSX, Markdown, Python, and more
-- **🤖 AI-Powered** - Claude API for smart summaries and tagging
+- **🔌 Works Offline** - No API required! Uses local models and heuristics
+- **🤖 AI-Enhanced** - Optional Claude API for smarter summaries
 - **📦 No Server Required** - Pure file-based, runs locally
+
+## How It Works (No API Required)
+
+MetadataHub runs **100% locally** by default. Claude API is optional for enhanced features.
+
+| Component | Without API | With API |
+|-----------|-------------|----------|
+| **Detection** | Extension + magic bytes + content patterns | Same |
+| **Conversion** | pypdf, openpyxl, ast (local libs) | Same |
+| **Tree Building** | Heuristic rules (headers, sheets, AST) | AI-guided structure |
+| **Summaries** | File metadata + first lines | AI-generated summaries |
+| **Tags** | Keyword extraction | Semantic tags |
+| **Embeddings** | sentence-transformers (local) | Same |
+| **Search** | FAISS vector similarity | Same |
+
+### Local-Only Stack
+```
+Files → [pypdf/openpyxl/ast] → [regex/heuristics] → [MiniLM-L6-v2] → [FAISS]
+         Local converters       Local tree builder   Local embeddings   Local index
+```
+
+When you see `Note: No Claude API access — using heuristic strategies`, the system is running fully offline with no external API calls.
 
 ## Quick Start
 
