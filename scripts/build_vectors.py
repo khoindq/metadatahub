@@ -205,6 +205,71 @@ def search(
     return results
 
 
+def search_with_hints(
+    query: str,
+    vector_store_dir: Path,
+    tree_index_dir: Path,
+    top_k: int = 5,
+) -> list[dict]:
+    """Search with enriched results including navigation hints.
+
+    Returns results with:
+        - file: path to the source file
+        - hint: human-readable navigation hint
+        - node_path: navigation breadcrumb
+        - preview: optional content preview
+    """
+    from scripts.build_tree import load_tree
+    
+    base_results = search(query, vector_store_dir, top_k=top_k)
+    
+    enriched = []
+    for result in base_results:
+        source_id = result.get("id", "")
+        tree_path = tree_index_dir / f"{source_id}.tree.json"
+        
+        enriched_result = {
+            "file": result.get("filename", ""),
+            "source_id": source_id,
+            "score": result.get("score", 0),
+            "rank": result.get("rank", 0),
+            "summary": result.get("summary", ""),
+            "hint": None,
+            "node_path": [],
+            "preview": None,
+        }
+        
+        # Load tree and extract hints
+        tree = load_tree(tree_path)
+        if tree:
+            root = tree.get("root", {})
+            children = root.get("children", [])
+            
+            # For spreadsheets, include sheet hints
+            hints = []
+            for child in children:
+                if child.get("hint"):
+                    hints.append(child["hint"])
+                elif child.get("title"):
+                    hints.append(child["title"])
+            
+            if hints:
+                enriched_result["hint"] = "; ".join(hints[:3])
+                # Node path is just the sheet names for now
+                enriched_result["node_path"] = [
+                    c.get("title", "").replace("Sheet: ", "")
+                    for c in children[:5]
+                ]
+            
+            # Get preview from first child if available
+            if children and children[0].get("preview"):
+                enriched_result["preview"] = children[0]["preview"]
+        
+        enriched.append(enriched_result)
+    
+    return enriched
+
+
 def add_to_index(
     sources: list[dict],
     vector_store_dir: Path,

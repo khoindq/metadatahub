@@ -224,13 +224,25 @@ def _build_schema_tree(
     source_converted_dir: Path,
     converter_result: Optional[dict],
 ) -> dict:
-    """Build schema tree for Excel/CSV/tabular data."""
+    """Build schema tree for Excel/CSV/tabular data.
+    
+    Creates a deeper tree structure with hints for navigation:
+    - Root: filename with overall summary
+    - Level 1: Sheets with column info hints
+    - Each sheet includes row_labels and column info for hint generation
+    """
+    from scripts.converters.xlsx_converter import get_sheet_hint
+    
     summary = source_entry.get("summary", f"Spreadsheet: {source_entry['filename']}")
     children = []
 
     if converter_result and "sheets" in converter_result:
         for i, sheet in enumerate(converter_result["sheets"]):
             node_id = f"n{i + 1}"
+            
+            # Generate rich hint for the sheet
+            hint = get_sheet_hint(sheet)
+            
             sheet_summary = (
                 f"{sheet['row_count']} rows, {sheet['column_count']} columns. "
                 f"Headers: {', '.join(sheet['headers'][:8])}"
@@ -238,27 +250,36 @@ def _build_schema_tree(
             if len(sheet["headers"]) > 8:
                 sheet_summary += f" (+{len(sheet['headers']) - 8} more)"
 
-            # Build content_ref from converted dir
+            # Build content_ref from converted dir - prefer markdown
             safe_name = sheet["name"].replace("/", "_").replace(" ", "_").lower()
             content_ref = None
-            candidate = source_converted_dir / f"sheet_{safe_name}.json"
-            if candidate.exists():
-                content_ref = str(candidate.relative_to(source_converted_dir.parent.parent))
+            md_candidate = source_converted_dir / f"sheet_{safe_name}.md"
+            json_candidate = source_converted_dir / f"sheet_{safe_name}.json"
+            
+            if md_candidate.exists():
+                content_ref = str(md_candidate.relative_to(source_converted_dir.parent.parent))
+            elif json_candidate.exists():
+                content_ref = str(json_candidate.relative_to(source_converted_dir.parent.parent))
 
-            sample_data = ""
+            # Build preview from sample data
+            preview = ""
             if sheet.get("sample_rows"):
                 first_row = sheet["sample_rows"][0]
-                sample_data = ", ".join(f"{k}: {v}" for k, v in list(first_row.items())[:4])
+                preview = ", ".join(f"{k}: {v}" for k, v in list(first_row.items())[:4])
 
             child = {
                 "node_id": node_id,
                 "title": f"Sheet: {sheet['name']}",
                 "summary": sheet_summary,
+                "hint": hint,
                 "children": [],
                 "content_ref": content_ref,
+                # Store metadata for search output
+                "headers": sheet.get("headers", []),
+                "row_labels": sheet.get("row_labels", [])[:10],
             }
-            if sample_data:
-                child["sample_data"] = sample_data
+            if preview:
+                child["preview"] = preview
 
             children.append(child)
     elif source_converted_dir.exists():

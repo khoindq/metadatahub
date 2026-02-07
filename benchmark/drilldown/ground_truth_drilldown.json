@@ -1,0 +1,283 @@
+{
+  "version": "1.0",
+  "description": "Drill-down benchmark for MetadataHub tree navigation - tests Tier 2 capability",
+  "created_at": "2025-02-07",
+  "categories": {
+    "excel_cell": "Navigate to specific cell in Excel (sheet → row → column)",
+    "code_method": "Navigate to specific method in code (class → method)",
+    "code_class": "Navigate to specific class in code",
+    "markdown_section": "Navigate to specific section in markdown (heading hierarchy)"
+  },
+  "queries": [
+    {
+      "id": "dd001",
+      "query": "What is Q3 Cloud revenue?",
+      "query_vi": "Doanh thu Cloud Q3 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Revenue", "row:Q3", "col:Cloud"],
+      "expected_value": "45.2",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd002",
+      "query": "What was the total revenue in Q2?",
+      "query_vi": "Tổng doanh thu Q2 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Revenue", "row:Q2", "col:Total"],
+      "expected_value": "94.2",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd003",
+      "query": "How much was spent on Marketing in Q3?",
+      "query_vi": "Chi phí Marketing Q3 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Expenses", "row:Marketing", "col:Q3"],
+      "expected_value": "12.3",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd004",
+      "query": "What is the annual R&D budget?",
+      "query_vi": "Ngân sách R&D cả năm là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Expenses", "row:R&D", "col:Annual Budget"],
+      "expected_value": "65.0",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd005",
+      "query": "What was the Q4 Product revenue?",
+      "query_vi": "Doanh thu Product Q4 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Revenue", "row:Q4", "col:Product"],
+      "expected_value": "41.5",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd006",
+      "query": "What is the operating margin in Q3?",
+      "query_vi": "Biên lợi nhuận hoạt động Q3 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Summary", "row:Operating Margin"],
+      "expected_value": "33.2%",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd007",
+      "query": "What was the YoY Cloud revenue growth?",
+      "query_vi": "Tăng trưởng doanh thu Cloud so với cùng kỳ năm trước?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Summary", "row:Cloud Revenue", "col:Change"],
+      "expected_value": "+28.4%",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd008",
+      "query": "How much revenue came from Europe in Q3?",
+      "query_vi": "Doanh thu từ châu Âu Q3 là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Summary", "section:Regional Performance", "row:Europe"],
+      "expected_value": "30.6M",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd009",
+      "query": "What was the salary expense variance?",
+      "query_vi": "Chênh lệch chi phí lương là bao nhiêu?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Expenses", "row:Salaries", "col:Variance"],
+      "expected_value": "-0.4",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd010",
+      "query": "How many active users were there in Q3?",
+      "query_vi": "Có bao nhiêu người dùng hoạt động trong Q3?",
+      "tier1_expected_source": "financial_q3_report.xlsx",
+      "tier2_expected_path": ["sheet:Summary", "row:Active Users"],
+      "expected_value": "2.3M",
+      "category": "excel_cell"
+    },
+    {
+      "id": "dd011",
+      "query": "How does TokenManager validate expired tokens?",
+      "query_vi": "TokenManager xác thực token hết hạn như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:TokenManager", "method:validate_token"],
+      "expected_content_contains": ["TokenExpiredError", "expires_at"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd012",
+      "query": "How does PasswordHasher hash a password?",
+      "query_vi": "PasswordHasher băm mật khẩu như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:PasswordHasher", "method:hash_password"],
+      "expected_content_contains": ["pbkdf2_hmac", "sha256", "salt"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd013",
+      "query": "What does the authenticate method in AuthService do?",
+      "query_vi": "Phương thức authenticate trong AuthService làm gì?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:AuthService", "method:authenticate"],
+      "expected_content_contains": ["access_token", "refresh_token", "InvalidCredentialsError"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd014",
+      "query": "How does AuthService handle account lockout?",
+      "query_vi": "AuthService xử lý khóa tài khoản như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:AuthService", "method:_is_locked_out"],
+      "expected_content_contains": ["lockout_until", "time.time"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd015",
+      "query": "How does the logout function work?",
+      "query_vi": "Hàm logout hoạt động như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:AuthService", "method:logout"],
+      "expected_content_contains": ["revoke_token", "active_sessions"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd016",
+      "query": "How is the token payload encoded?",
+      "query_vi": "Payload token được mã hóa như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:TokenManager", "method:_encode_token"],
+      "expected_content_contains": ["base64", "hmac", "signature"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd017",
+      "query": "What is the TokenPayload dataclass structure?",
+      "query_vi": "Cấu trúc dataclass TokenPayload là gì?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:TokenPayload"],
+      "expected_content_contains": ["user_id", "username", "roles", "expires_at"],
+      "category": "code_class"
+    },
+    {
+      "id": "dd018",
+      "query": "How does refresh_token create new tokens?",
+      "query_vi": "refresh_token tạo token mới như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:TokenManager", "method:refresh_token"],
+      "expected_content_contains": ["validate_token", "revoke_token", "create_token"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd019",
+      "query": "What password policy validations are performed?",
+      "query_vi": "Các xác thực chính sách mật khẩu được thực hiện là gì?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:AuthService", "method:_validate_password_policy"],
+      "expected_content_contains": ["min_password_length", "uppercase", "special_char"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd020",
+      "query": "How does change_password verify the old password?",
+      "query_vi": "change_password xác thực mật khẩu cũ như thế nào?",
+      "tier1_expected_source": "auth_module.py",
+      "tier2_expected_path": ["class:AuthService", "method:change_password"],
+      "expected_content_contains": ["verify_password", "InvalidCredentialsError"],
+      "category": "code_method"
+    },
+    {
+      "id": "dd021",
+      "query": "What are the request parameters for the login endpoint?",
+      "query_vi": "Các tham số request cho endpoint login là gì?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Authentication", "section:Login Endpoint", "section:Request Parameters"],
+      "expected_content_contains": ["username", "password", "remember_me", "mfa_code"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd022",
+      "query": "What is the response format for login?",
+      "query_vi": "Định dạng response cho login là gì?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Authentication", "section:Login Endpoint", "section:Response Format"],
+      "expected_content_contains": ["access_token", "refresh_token", "expires_in"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd023",
+      "query": "How do I create a new record in a collection?",
+      "query_vi": "Làm thế nào để tạo record mới trong collection?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Data Operations", "section:Create Record"],
+      "expected_content_contains": ["POST", "/data/{collection}", "Request Body"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd024",
+      "query": "What filter operators are available for querying?",
+      "query_vi": "Các toán tử filter nào có sẵn để truy vấn?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Data Operations", "section:Query Records", "section:Filter Syntax"],
+      "expected_content_contains": ["eq", "gt", "contains", "in"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd025",
+      "query": "What are the API rate limits?",
+      "query_vi": "Giới hạn tần suất API là bao nhiêu?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Rate Limits"],
+      "expected_content_contains": ["Free", "Pro", "Enterprise", "Requests/minute"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd026",
+      "query": "How do I register a webhook?",
+      "query_vi": "Làm thế nào để đăng ký webhook?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Webhooks", "section:Register Webhook"],
+      "expected_content_contains": ["POST /webhooks", "url", "events"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd027",
+      "query": "What is the webhook payload format?",
+      "query_vi": "Định dạng payload webhook là gì?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Webhooks", "section:Webhook Payload"],
+      "expected_content_contains": ["event", "timestamp", "signature"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd028",
+      "query": "How do I refresh my access token?",
+      "query_vi": "Làm thế nào để làm mới access token?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Authentication", "section:Token Refresh"],
+      "expected_content_contains": ["POST /auth/refresh", "refresh_token"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd029",
+      "query": "What error codes can the API return?",
+      "query_vi": "API có thể trả về những mã lỗi nào?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Error Handling", "section:Common Error Codes"],
+      "expected_content_contains": ["INVALID_REQUEST", "UNAUTHORIZED", "RATE_LIMITED"],
+      "category": "markdown_section"
+    },
+    {
+      "id": "dd030",
+      "query": "How do I perform batch operations?",
+      "query_vi": "Làm thế nào để thực hiện batch operations?",
+      "tier1_expected_source": "api_documentation.md",
+      "tier2_expected_path": ["section:Batch Operations", "section:Batch Create"],
+      "expected_content_contains": ["POST", "/batch", "records", "1000"],
+      "category": "markdown_section"
+    }
+  ]
+}
