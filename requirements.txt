@@ -1,0 +1,7 @@
+faiss-cpu
+sentence-transformers
+pypdf
+openpyxl
+python-docx
+tiktoken
+httpx

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+*.faiss
+config.json
+vector_store/
+converted/
+.DS_Store
