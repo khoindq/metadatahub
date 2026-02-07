@@ -1,7 +1,22 @@
-faiss-cpu
-sentence-transformers
-pypdf
-openpyxl
-python-docx
-tiktoken
-httpx
+# MetadataHub Dependencies
+
+# Core
+httpx>=0.24.0
+pydantic>=2.0.0
+
+# File processing
+python-magic>=0.4.27
+openpyxl>=3.1.0
+pypdf>=3.0.0
+
+# Vector search
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.0
+numpy>=1.24.0
+
+# Optional: Claude API
+anthropic>=0.18.0
+
+# Development
+pytest>=7.0.0
+pytest-cov>=4.0.0

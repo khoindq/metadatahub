@@ -25,6 +25,7 @@ from scripts.converters import convert_file
 from scripts.build_tree import build_tree_for_source
 from scripts.catalog import load_catalog, save_catalog, add_source
 from scripts.build_vectors import build_index
+from scripts.incremental import get_changed_files, update_hash_index
 
 
 def ingest_file(
@@ -154,6 +155,7 @@ def ingest(
     config: Config,
     client=None,
     skip_vectors: bool = False,
+    incremental: bool = False,
     verbose: bool = True,
 ) -> dict:
     """Run the full ingest pipeline on a file or directory.
@@ -163,6 +165,7 @@ def ingest(
         config: MetadataHub Config.
         client: Optional ClaudeClient for AI-powered sampling/tree building.
         skip_vectors: If True, skip FAISS index rebuild.
+        incremental: If True, only process new/changed files.
         verbose: Print progress.
 
     Returns:
@@ -182,10 +185,19 @@ def ingest(
     else:
         raise FileNotFoundError(f"Input not found: {input_path}")
 
-    if verbose:
-        print(f"MetadataHub Ingest")
-        print(f"  Store: {config.store_root}")
-        print(f"  Files found: {len(files)}")
+    # Incremental mode: filter to new/changed files only
+    if incremental and len(files) > 0:
+        new_files, changed_files, unchanged_ids = get_changed_files(files, config.store_root)
+        files = new_files + changed_files
+        if verbose:
+            print(f"MetadataHub Ingest (incremental)")
+            print(f"  Store: {config.store_root}")
+            print(f"  New files: {len(new_files)}, Changed: {len(changed_files)}, Unchanged: {len(unchanged_ids)}")
+    else:
+        if verbose:
+            print(f"MetadataHub Ingest")
+            print(f"  Store: {config.store_root}")
+            print(f"  Files found: {len(files)}")
 
     start_time = time.time()
     processed = 0
@@ -203,6 +215,10 @@ def ingest(
     save_catalog(catalog, config.catalog_path)
     if verbose:
         print(f"\n  Catalog saved: {config.catalog_path} ({len(catalog['sources'])} sources)")
+
+    # Update hash index for incremental mode
+    if incremental and processed > 0:
+        update_hash_index(config.store_root, files)
 
     # Build vector index
     vector_stats = None
@@ -252,6 +268,11 @@ def main():
         help="Skip FAISS vector index rebuild",
     )
     parser.add_argument(
+        "--incremental", "-i",
+        action="store_true",
+        help="Only process new or changed files",
+    )
+    parser.add_argument(
         "--quiet",
         action="store_true",
         help="Suppress progress output",
@@ -279,6 +300,7 @@ def main():
         config,
         client=client,
         skip_vectors=args.no_vectors,
+        incremental=args.incremental,
         verbose=not args.quiet,
     )
 

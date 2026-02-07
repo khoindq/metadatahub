@@ -475,11 +475,11 @@ httpx                   (Claude OAuth calls)
 
 ### Phase 4 — Polish & Open Source (Week 6)
 
-- [ ] Incremental re-indexing (only new/changed files)
-- [ ] Cross-source linking (Claude identifies related documents)
+- [x] Incremental re-indexing (only new/changed files)
+- [x] Cross-source linking (Claude identifies related documents)
 - [ ] Quality scoring (confidence metadata on each tree node)
-- [ ] README, examples, license
-- [ ] GitHub release
+- [x] README, examples, license
+- [x] GitHub release prep
 
 ---
 

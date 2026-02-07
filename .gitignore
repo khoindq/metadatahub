@@ -10,3 +10,10 @@ tree_index/
 .oauth_token
 .pytest_cache/
 catalog.json
+test_inbox/
+test_store/
+build.log
+demo_store/
+*.pyc
+__pycache__/
+.DS_Store
