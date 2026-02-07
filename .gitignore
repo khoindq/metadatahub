@@ -5,4 +5,8 @@ __pycache__/
 config.json
 vector_store/
 converted/
+tree_index/
 .DS_Store
+.oauth_token
+.pytest_cache/
+catalog.json
