@@ -1,0 +1,11 @@
+{
+  "name": "metadatahub",
+  "version": "1.0",
+  "description": "Search and retrieve from the MetadataHub document index",
+  "store_path": ".",
+  "scripts": {
+    "search": "search.py",
+    "deep_retrieve": "deep_retrieve.py",
+    "read_source": "read_source.py"
+  }
+}
