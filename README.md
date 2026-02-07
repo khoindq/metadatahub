@@ -227,6 +227,31 @@ Then ask questions naturally:
 pytest tests/ -v
 ```
 
+## Evaluation
+
+MetadataHub includes an evaluation framework to measure retrieval quality.
+
+### Quick Evaluation
+
+```bash
+# Run evaluation against your store
+python scripts/evaluate.py --store ~/.metadatahub/store
+
+# Use Vietnamese queries
+python scripts/evaluate.py --store ~/.metadatahub/store --lang vi
+
+# Compare runs
+python scripts/compare_runs.py baseline.json improved.json
+```
+
+### Metrics
+
+- **Recall@K**: Are relevant documents in the top K results?
+- **MRR**: How high is the first relevant result?
+- **Tree Accuracy**: Can we navigate to the correct tree node?
+
+See [evaluation/README.md](evaluation/README.md) for detailed documentation.
+
 ### Test Coverage
 
 - Phase 1 (Core): 63 tests

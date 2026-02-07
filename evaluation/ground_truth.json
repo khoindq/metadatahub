@@ -1,0 +1,146 @@
+{
+  "version": "1.0",
+  "description": "Ground truth dataset for MetadataHub evaluation",
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What is the Q3 revenue?",
+      "query_vi": "Doanh thu Q3 là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["report_q3_2024.xlsx", "quarterly_summary.pdf"],
+      "expected_nodes": ["n_revenue", "n_q3_summary"],
+      "tags": ["revenue", "quarterly", "excel"]
+    },
+    {
+      "id": "q2",
+      "query": "Find the budget breakdown by department",
+      "query_vi": "Tìm phân bổ ngân sách theo phòng ban",
+      "category": "financial",
+      "expected_sources": ["budget_2024.xlsx"],
+      "expected_nodes": ["n_dept_budget", "n_summary_sheet"],
+      "tags": ["budget", "department", "excel"]
+    },
+    {
+      "id": "q3",
+      "query": "What functions handle PDF conversion?",
+      "query_vi": "Những hàm nào xử lý chuyển đổi PDF?",
+      "category": "code",
+      "expected_sources": ["pdf_converter.py", "converters/__init__.py"],
+      "expected_nodes": ["n_convert_pdf", "n_extract_pages"],
+      "tags": ["pdf", "converter", "python", "function"]
+    },
+    {
+      "id": "q4",
+      "query": "How does the tree building algorithm work?",
+      "query_vi": "Thuật toán xây dựng cây hoạt động như thế nào?",
+      "category": "code",
+      "expected_sources": ["build_tree.py"],
+      "expected_nodes": ["n_build_tree", "n_tree_node_class"],
+      "tags": ["tree", "algorithm", "python"]
+    },
+    {
+      "id": "q5",
+      "query": "Find documentation about installation steps",
+      "query_vi": "Tìm tài liệu về các bước cài đặt",
+      "category": "documentation",
+      "expected_sources": ["README.md", "INSTALL.md"],
+      "expected_nodes": ["n_quickstart", "n_installation"],
+      "tags": ["install", "setup", "markdown"]
+    },
+    {
+      "id": "q6",
+      "query": "What are the API endpoints?",
+      "query_vi": "Các endpoint API là gì?",
+      "category": "documentation",
+      "expected_sources": ["api_docs.md", "README.md"],
+      "expected_nodes": ["n_api_section", "n_endpoints"],
+      "tags": ["api", "endpoint", "markdown"]
+    },
+    {
+      "id": "q7",
+      "query": "Show me the expense report for January",
+      "query_vi": "Hiển thị báo cáo chi tiêu tháng 1",
+      "category": "financial",
+      "expected_sources": ["expenses_2024.xlsx", "monthly_report.pdf"],
+      "expected_nodes": ["n_january_sheet", "n_expense_summary"],
+      "tags": ["expense", "monthly", "excel"]
+    },
+    {
+      "id": "q8",
+      "query": "What classes are defined in the catalog module?",
+      "query_vi": "Những class nào được định nghĩa trong module catalog?",
+      "category": "code",
+      "expected_sources": ["catalog.py"],
+      "expected_nodes": ["n_catalog_class", "n_source_entry"],
+      "tags": ["class", "catalog", "python"]
+    },
+    {
+      "id": "q9",
+      "query": "Find the executive summary section",
+      "query_vi": "Tìm phần tóm tắt điều hành",
+      "category": "documentation",
+      "expected_sources": ["annual_report.pdf", "business_plan.pdf"],
+      "expected_nodes": ["n_exec_summary", "n_overview"],
+      "tags": ["summary", "executive", "pdf"]
+    },
+    {
+      "id": "q10",
+      "query": "How is vector similarity search implemented?",
+      "query_vi": "Tìm kiếm tương đồng vector được triển khai như thế nào?",
+      "category": "code",
+      "expected_sources": ["build_vectors.py", "search.py"],
+      "expected_nodes": ["n_faiss_index", "n_similarity_search"],
+      "tags": ["vector", "faiss", "search", "python"]
+    },
+    {
+      "id": "q11",
+      "query": "What is the total profit margin?",
+      "query_vi": "Tỷ suất lợi nhuận tổng là bao nhiêu?",
+      "category": "financial",
+      "expected_sources": ["financial_statements.xlsx", "profit_loss.pdf"],
+      "expected_nodes": ["n_profit_margin", "n_financial_summary"],
+      "tags": ["profit", "margin", "financial", "excel"]
+    },
+    {
+      "id": "q12",
+      "query": "Find error handling patterns in the codebase",
+      "query_vi": "Tìm các mẫu xử lý lỗi trong mã nguồn",
+      "category": "code",
+      "expected_sources": ["ingest.py", "detect.py", "claude_client.py"],
+      "expected_nodes": ["n_try_except", "n_error_handler"],
+      "tags": ["error", "exception", "python"]
+    },
+    {
+      "id": "q13",
+      "query": "What file formats are supported?",
+      "query_vi": "Những định dạng file nào được hỗ trợ?",
+      "category": "documentation",
+      "expected_sources": ["README.md", "detect.py"],
+      "expected_nodes": ["n_supported_formats", "n_file_types"],
+      "tags": ["format", "support", "documentation"]
+    },
+    {
+      "id": "q14",
+      "query": "Show the project roadmap",
+      "query_vi": "Hiển thị lộ trình dự án",
+      "category": "documentation",
+      "expected_sources": ["README.md", "PLAN.md"],
+      "expected_nodes": ["n_roadmap", "n_milestones"],
+      "tags": ["roadmap", "plan", "markdown"]
+    },
+    {
+      "id": "q15",
+      "query": "Find all configuration options",
+      "query_vi": "Tìm tất cả các tùy chọn cấu hình",
+      "category": "code",
+      "expected_sources": ["config.py", "README.md"],
+      "expected_nodes": ["n_config_class", "n_config_section"],
+      "tags": ["config", "options", "settings"]
+    }
+  ],
+  "metadata": {
+    "created": "2024-01-01",
+    "categories": ["financial", "code", "documentation"],
+    "languages": ["en", "vi"]
+  }
+}
