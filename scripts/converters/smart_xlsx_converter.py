@@ -85,11 +85,14 @@ def convert_with_llm(
     sheets = []
     output_files = []
     
-    for sheet_name in wb.sheetnames:
+    total_sheets = len(wb.sheetnames)
+    for idx, sheet_name in enumerate(wb.sheetnames):
+        print(f"    [{idx+1}/{total_sheets}] {sheet_name}...", end=" ", flush=True)
         ws = wb[sheet_name]
         rows = list(ws.iter_rows(values_only=True))
         
         if not rows:
+            print("(empty)")
             sheets.append({
                 "name": sheet_name,
                 "layout": "empty",
@@ -110,12 +113,14 @@ def convert_with_llm(
         )
         
         if extracted:
+            print(f"✓ {extracted.get('layout', 'ok')}")
             sheet_info = {
                 "name": sheet_name,
                 **extracted,
                 "total_rows": len(rows),
             }
         else:
+            print("✗ fallback")
             # Fallback to raw representation
             sheet_info = {
                 "name": sheet_name,

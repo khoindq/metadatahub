@@ -125,8 +125,14 @@ class Config:
 
 
 def init_config(store_path: str = ".") -> Config:
-    """Create a fresh config and ensure all directories exist."""
-    config = Config(store_path=store_path)
+    """Load existing config or create fresh one, ensure directories exist."""
+    config_path = Path(store_path) / DEFAULT_CONFIG_PATH
+    if config_path.exists():
+        config = Config.load(config_path)
+    else:
+        config = Config(store_path=store_path)
+        config.save()
+    
     for d in [
         config.inbox_path,
         config.converted_path,
@@ -134,5 +140,4 @@ def init_config(store_path: str = ".") -> Config:
         config.vector_store_path,
     ]:
         d.mkdir(parents=True, exist_ok=True)
-    config.save()
     return config
