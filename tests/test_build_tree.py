@@ -16,6 +16,7 @@ from scripts.build_tree import (
     _build_document_tree,
     _build_schema_tree,
     _build_code_tree,
+    _build_column_nodes,
 )
 
 
@@ -168,6 +169,86 @@ class TestBuildSchemaTree:
             tmp_store / "converted" / "src_xlsx01", None,
         )
         assert tree["root"]["children"] == []
+
+    def test_with_rich_stats(self, tmp_store, sample_xlsx_source):
+        """Schema tree includes stats and column children."""
+        converter_result = {
+            "sheets": [
+                {
+                    "name": "Sales",
+                    "headers": ["date", "product", "amount"],
+                    "row_count": 100,
+                    "column_count": 3,
+                    "columns": [
+                        {"name": "date", "type": "date", "stats": {"date_range": "2025-01-01 to 2025-12-31"}},
+                        {"name": "product", "type": "text", "is_categorical": True, "categories": ["A", "B", "C"], "unique_count": 3},
+                        {"name": "amount", "type": "numeric", "stats": {"sum": 50000, "sum_formatted": "$50.0K", "avg": 500, "min": 100, "max": 1000}},
+                    ],
+                    "sample_rows": [{"date": "2025-01-01", "product": "A", "amount": 500}],
+                    "sample_data": "Row 1: 2025-01-01, A, $500",
+                    "stats": {
+                        "row_count": 100,
+                        "primary_numeric_column": "amount",
+                        "total_amount": 50000,
+                        "total_formatted": "$50.0K",
+                        "date_range": "2025-01-01 to 2025-12-31",
+                    },
+                },
+            ]
+        }
+
+        tree = _build_schema_tree(
+            "src_xlsx01", sample_xlsx_source,
+            tmp_store / "converted" / "src_xlsx01", converter_result,
+        )
+
+        sheet_node = tree["root"]["children"][0]
+
+        # Check stats are included in tree node
+        assert "stats" in sheet_node
+        assert sheet_node["stats"]["total_formatted"] == "$50.0K"
+
+        # Check summary includes stats
+        assert "amount: $50.0K" in sheet_node["summary"]
+        assert "Date range:" in sheet_node["summary"]
+
+        # Check column children are generated
+        assert len(sheet_node["children"]) > 0
+        col_titles = [c["title"] for c in sheet_node["children"]]
+        assert "Column: amount" in col_titles
+        assert "Column: product" in col_titles  # categorical
+        assert "Column: date" in col_titles  # date with range
+
+    def test_column_nodes_numeric(self, tmp_store, sample_xlsx_source):
+        """Column nodes have proper numeric stats summary."""
+        from scripts.build_tree import _build_column_nodes
+
+        columns = [
+            {"name": "amount", "type": "numeric", "stats": {
+                "sum": 50000, "sum_formatted": "$50.0K",
+                "avg": 500, "min": 100, "max": 1000
+            }},
+        ]
+
+        nodes = _build_column_nodes(columns, "n1")
+        assert len(nodes) == 1
+        assert nodes[0]["title"] == "Column: amount"
+        assert "Total: $50.0K" in nodes[0]["summary"]
+        assert "Range: 100" in nodes[0]["summary"]
+
+    def test_column_nodes_categorical(self, tmp_store, sample_xlsx_source):
+        """Column nodes detect categorical columns."""
+        from scripts.build_tree import _build_column_nodes
+
+        columns = [
+            {"name": "region", "type": "text", "is_categorical": True,
+             "categories": ["North", "South", "East", "West"], "unique_count": 4},
+        ]
+
+        nodes = _build_column_nodes(columns, "n1")
+        assert len(nodes) == 1
+        assert "Categorical column" in nodes[0]["summary"]
+        assert "4 unique" in nodes[0]["summary"]
 
 
 class TestBuildCodeTree:

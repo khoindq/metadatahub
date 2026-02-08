@@ -88,6 +88,47 @@ def test_xlsx_get_sample():
     assert "Headers:" in sample
 
 
+def test_xlsx_column_analysis():
+    """Test that column type detection and stats work."""
+    result = xlsx_convert(Path("tests/fixtures/test.xlsx"))
+    sales = result["sheets"][0]
+
+    # Check columns are analyzed
+    assert "columns" in sales
+    assert len(sales["columns"]) == 4
+
+    # Find Amount column (numeric)
+    amount_col = next(c for c in sales["columns"] if c["name"] == "Amount")
+    assert amount_col["type"] == "numeric"
+    assert "stats" in amount_col
+    assert amount_col["stats"]["sum"] == 83200.0
+    assert amount_col["stats"]["min"] == 6300.0
+    assert amount_col["stats"]["max"] == 22100.0
+
+
+def test_xlsx_sheet_stats():
+    """Test sheet-level aggregated stats."""
+    result = xlsx_convert(Path("tests/fixtures/test.xlsx"))
+    sales = result["sheets"][0]
+
+    assert "stats" in sales
+    assert sales["stats"]["row_count"] == 6
+    assert sales["stats"]["primary_numeric_column"] == "Amount"
+    assert sales["stats"]["total_amount"] == 83200.0
+
+
+def test_xlsx_sample_data_format():
+    """Test PageIndex-style sample_data formatting."""
+    result = xlsx_convert(Path("tests/fixtures/test.xlsx"))
+    sales = result["sheets"][0]
+
+    assert "sample_data" in sales
+    assert "Row 1:" in sales["sample_data"]
+    assert "Widget Pro" in sales["sample_data"]
+    # Should be semicolon-separated rows
+    assert ";" in sales["sample_data"]
+
+
 # --- Registry ---
 
 def test_get_converter_known():

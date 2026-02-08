@@ -224,19 +224,37 @@ def _build_schema_tree(
     source_converted_dir: Path,
     converter_result: Optional[dict],
 ) -> dict:
-    """Build schema tree for Excel/CSV/tabular data."""
+    """Build schema tree for Excel/CSV/tabular data.
+
+    Creates a rich tree with:
+    - Sheet-level nodes with stats and sample data
+    - Column-level children for detailed schema exploration
+    """
     summary = source_entry.get("summary", f"Spreadsheet: {source_entry['filename']}")
     children = []
 
     if converter_result and "sheets" in converter_result:
         for i, sheet in enumerate(converter_result["sheets"]):
             node_id = f"n{i + 1}"
-            sheet_summary = (
-                f"{sheet['row_count']} rows, {sheet['column_count']} columns. "
-                f"Headers: {', '.join(sheet['headers'][:8])}"
-            )
-            if len(sheet["headers"]) > 8:
-                sheet_summary += f" (+{len(sheet['headers']) - 8} more)"
+
+            # Build rich sheet summary
+            sheet_summary_parts = [f"{sheet['row_count']} rows, {sheet['column_count']} columns"]
+
+            # Add stats if available
+            stats = sheet.get("stats", {})
+            if stats.get("total_formatted"):
+                col_name = stats.get("primary_numeric_column", "total")
+                sheet_summary_parts.append(f"{col_name}: {stats['total_formatted']}")
+            if stats.get("date_range"):
+                sheet_summary_parts.append(f"Date range: {stats['date_range']}")
+
+            # Add header preview
+            headers_preview = ", ".join(sheet["headers"][:6])
+            if len(sheet["headers"]) > 6:
+                headers_preview += f" (+{len(sheet['headers']) - 6} more)"
+            sheet_summary_parts.append(f"Columns: {headers_preview}")
+
+            sheet_summary = ". ".join(sheet_summary_parts)
 
             # Build content_ref from converted dir
             safe_name = sheet["name"].replace("/", "_").replace(" ", "_").lower()
@@ -245,20 +263,26 @@ def _build_schema_tree(
             if candidate.exists():
                 content_ref = str(candidate.relative_to(source_converted_dir.parent.parent))
 
-            sample_data = ""
-            if sheet.get("sample_rows"):
+            # Use pre-formatted sample_data if available, else build from sample_rows
+            sample_data = sheet.get("sample_data", "")
+            if not sample_data and sheet.get("sample_rows"):
                 first_row = sheet["sample_rows"][0]
                 sample_data = ", ".join(f"{k}: {v}" for k, v in list(first_row.items())[:4])
+
+            # Build column-level children for detailed schema
+            column_children = _build_column_nodes(sheet.get("columns", []), node_id)
 
             child = {
                 "node_id": node_id,
                 "title": f"Sheet: {sheet['name']}",
                 "summary": sheet_summary,
-                "children": [],
+                "children": column_children,
                 "content_ref": content_ref,
             }
             if sample_data:
                 child["sample_data"] = sample_data
+            if stats:
+                child["stats"] = stats
 
             children.append(child)
     elif source_converted_dir.exists():
@@ -269,15 +293,81 @@ def _build_schema_tree(
     )
     sheet_count = len((converter_result or {}).get("sheets", []))
 
+    # Build root-level summary with aggregated stats
+    root_summary = f"{summary} ({sheet_count} sheets, {total_rows} total rows)"
+
+    # Add workbook-level aggregations if multiple sheets
+    if converter_result and len(converter_result.get("sheets", [])) > 1:
+        all_stats = [s.get("stats", {}) for s in converter_result["sheets"]]
+        totals = [s.get("total_formatted") for s in all_stats if s.get("total_formatted")]
+        if totals:
+            root_summary += f". Combined totals across sheets."
+
     return {
         "id": source_id,
         "root": {
             "node_id": "n0",
             "title": source_entry["filename"],
-            "summary": f"{summary} ({sheet_count} sheets, {total_rows} total rows)",
+            "summary": root_summary,
             "children": children,
         },
     }
+
+
+def _build_column_nodes(columns: list[dict], parent_id: str) -> list[dict]:
+    """Build tree nodes for individual columns with type and stats info.
+
+    Only creates nodes for columns with interesting metadata (numeric stats,
+    date ranges, or categorical values).
+    """
+    nodes = []
+
+    for col_idx, col in enumerate(columns):
+        col_type = col.get("type", "unknown")
+        stats = col.get("stats", {})
+
+        # Skip columns without interesting metadata
+        if col_type in ("unknown", "empty", "text") and not col.get("is_categorical"):
+            continue
+
+        node_id = f"{parent_id}.{col_idx + 1}"
+        col_name = col.get("name", f"Column {col_idx + 1}")
+
+        # Build column summary based on type
+        if col_type == "numeric" and stats:
+            summary_parts = [f"Numeric column"]
+            if "sum_formatted" in stats:
+                summary_parts.append(f"Total: {stats['sum_formatted']}")
+            elif "sum" in stats:
+                summary_parts.append(f"Total: {stats['sum']:.2f}")
+            if "avg" in stats:
+                summary_parts.append(f"Avg: {stats['avg']:.2f}")
+            if "min" in stats and "max" in stats:
+                summary_parts.append(f"Range: {stats['min']:.2f} - {stats['max']:.2f}")
+            summary = ". ".join(summary_parts)
+
+        elif col_type == "date" and stats:
+            summary = f"Date column. Range: {stats.get('date_range', 'unknown')}"
+
+        elif col.get("is_categorical"):
+            cats = col.get("categories", [])
+            cats_preview = ", ".join(cats[:5])
+            if len(cats) > 5:
+                cats_preview += f" (+{len(cats) - 5} more)"
+            summary = f"Categorical column ({col.get('unique_count', '?')} unique). Values: {cats_preview}"
+
+        else:
+            continue  # Skip if no interesting info
+
+        nodes.append({
+            "node_id": node_id,
+            "title": f"Column: {col_name}",
+            "summary": summary,
+            "children": [],
+            "column_type": col_type,
+        })
+
+    return nodes
 
 
 def _build_code_tree(
