@@ -203,12 +203,23 @@ class ClaudeClient:
         self.close()
 
     @classmethod
-    def from_config(cls, config, use_cli: bool = True) -> "ClaudeClient":
+    def from_config(cls, config, use_cli: Optional[bool] = None) -> "ClaudeClient":
         """Create a client from a Config object."""
-        token_path = config.oauth.token_path(config.store_root)
+        llm = config.llm
+        token_path = llm.token_path(config.store_root)
+        
+        # Determine use_cli: explicit param > config > default (False for API-first)
+        if use_cli is None:
+            use_cli = llm.use_cli
+        
+        # Get API key from config or environment
+        import os
+        api_key = llm.api_key or os.environ.get("METADATAHUB_API_KEY")
+        
         return cls(
             use_cli=use_cli,
+            api_key=api_key,
             token_file=token_path if token_path.exists() else None,
-            base_url=config.oauth.base_url,
-            model=config.ingest.model,
+            base_url=llm.base_url,
+            model=llm.model,
         )

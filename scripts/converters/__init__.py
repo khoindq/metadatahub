@@ -31,8 +31,23 @@ def get_converter(file_type: str, category: str = "unknown"):
 
 
 def convert_file(filepath: Path, file_type: str, category: str = "unknown",
-                 output_dir: Optional[Path] = None) -> Optional[dict]:
-    """Convert a file using the appropriate converter."""
+                 output_dir: Optional[Path] = None, client=None) -> Optional[dict]:
+    """Convert a file using the appropriate converter.
+    
+    Args:
+        filepath: Path to file
+        file_type: Detected file type
+        category: File category (document, spreadsheet, etc.)
+        output_dir: Directory to write converted files
+        client: Optional ClaudeClient for smart conversion (Excel)
+    """
+    # For Excel with LLM client available, use smart converter
+    if file_type == "xlsx" and client is not None:
+        from scripts.converters import smart_xlsx_converter
+        return smart_xlsx_converter.convert_with_llm(
+            filepath, client, output_dir=output_dir
+        )
+    
     converter = get_converter(file_type, category)
     if converter is None:
         return None

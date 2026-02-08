@@ -4,15 +4,16 @@ import json
 import tempfile
 from pathlib import Path
 
-from scripts.config import Config, OAuthConfig, IngestSettings, init_config
+from scripts.config import Config, LLMConfig, IngestSettings, init_config
 
 
 def test_default_config():
     c = Config()
     assert c.store_path == "."
     assert c.version == "1.0"
-    assert c.oauth.base_url == "https://api.anthropic.com"
-    assert c.ingest.model == "claude-sonnet-4-5-20250929"
+    # New defaults: Z.ai
+    assert c.llm.base_url == "https://api.z.ai/api/anthropic"
+    assert c.llm.model == "glm-4.7"
     assert c.ingest.max_sample_tokens == 2000
     assert c.ingest.max_pages_sample == 2
 
@@ -27,12 +28,12 @@ def test_config_paths():
 
 def test_config_roundtrip():
     c = Config(store_path="/tmp/test_store")
-    c.oauth.client_id = "test-client"
+    c.llm.client_id = "test-client"
     d = c.to_dict()
     c2 = Config.from_dict(d)
     assert c2.store_path == "/tmp/test_store"
-    assert c2.oauth.client_id == "test-client"
-    assert c2.ingest.model == c.ingest.model
+    assert c2.llm.client_id == "test-client"
+    assert c2.llm.model == c.llm.model
 
 
 def test_config_save_load():
@@ -59,7 +60,14 @@ def test_init_config():
         assert (Path(tmpdir) / "config.json").exists()
 
 
-def test_oauth_token_path():
+def test_llm_token_path():
     c = Config()
-    tp = c.oauth.token_path(c.store_root)
+    tp = c.llm.token_path(c.store_root)
     assert tp.name == ".oauth_token"
+
+
+def test_oauth_backwards_compat():
+    """Test that config.oauth still works as alias for config.llm."""
+    c = Config()
+    assert c.oauth is c.llm
+    assert c.oauth.model == c.llm.model
