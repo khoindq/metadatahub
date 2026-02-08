@@ -19,6 +19,7 @@ sys.path.insert(0, str(_project_root))
 
 from scripts.config import Config
 from scripts.build_tree import load_tree, find_node
+from scripts.catalog import load_catalog, find_source
 
 
 def read_node_content(
@@ -63,7 +64,7 @@ def read_node_content(
             else:
                 content = content_path.read_text(encoding="utf-8", errors="ignore")
 
-    return {
+    result = {
         "source_id": source_id,
         "node_id": node_id,
         "title": node.get("title", ""),
@@ -71,6 +72,19 @@ def read_node_content(
         "content_ref": content_ref,
         "content": content,
     }
+
+    # Check if this is spreadsheet data (sample only) and add note
+    catalog = load_catalog(config.catalog_path)
+    source = find_source(catalog, source_id)
+    if source and source.get("category") == "spreadsheet":
+        result["note"] = (
+            "⚠️ This is SAMPLE DATA (first few rows only). "
+            "For full data, read the original file."
+        )
+        result["original_path"] = source.get("original_path", "")
+        result["row_count"] = node.get("stats", {}).get("row_count") or "unknown"
+
+    return result
 
 
 def read_file(filepath: str, store_path: str = ".") -> str | None:
@@ -124,11 +138,23 @@ def read_all_content(source_id: str, store_path: str = ".") -> dict | None:
             except Exception:
                 files.append({"name": f.name, "content": "(unreadable)"})
 
-    return {
+    result = {
         "source_id": source_id,
         "files": files,
         "total_files": len(files),
     }
+
+    # Check if this is spreadsheet data and add note
+    catalog = load_catalog(config.catalog_path)
+    source = find_source(catalog, source_id)
+    if source and source.get("category") == "spreadsheet":
+        result["note"] = (
+            "⚠️ This is SAMPLE DATA (first few rows only). "
+            "For full data, read the original file."
+        )
+        result["original_path"] = source.get("original_path", "")
+
+    return result
 
 
 def main():
