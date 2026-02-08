@@ -84,6 +84,7 @@ def ingest_file(
             file_card["type"],
             file_card["category"],
             output_dir=output_dir,
+            client=client,  # Pass client for smart Excel conversion
         )
     except Exception as e:
         if verbose:
