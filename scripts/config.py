@@ -17,26 +17,37 @@ DEFAULT_CONFIG_PATH = Path("config.json")
 # Default store is the current directory (metadatahub root)
 DEFAULT_STORE_PATH = "."
 
-DEFAULT_MODEL = "claude-sonnet-4-5-20250929"
+# Z.ai defaults (GLM-4.7 via Anthropic-compatible API)
+DEFAULT_BASE_URL = "https://api.z.ai/api/anthropic"
+DEFAULT_MODEL = "glm-4.7"
 DEFAULT_MAX_SAMPLE_TOKENS = 2000
 DEFAULT_MAX_PAGES_SAMPLE = 2
 
 
 @dataclass
-class OAuthConfig:
+class LLMConfig:
+    """LLM provider configuration."""
+    base_url: str = DEFAULT_BASE_URL
+    api_key: Optional[str] = None  # Set via env METADATAHUB_API_KEY or config
+    model: str = DEFAULT_MODEL
+    use_cli: bool = False  # True to use claude CLI instead of API
+    
+    # Legacy OAuth support
     token_file: str = ".oauth_token"
     client_id: Optional[str] = None
-    base_url: str = "https://api.anthropic.com"
 
     def token_path(self, store_root: Path) -> Path:
         return store_root / self.token_file
+
+
+# Backwards compatibility alias
+OAuthConfig = LLMConfig
 
 
 @dataclass
 class IngestSettings:
     max_sample_tokens: int = DEFAULT_MAX_SAMPLE_TOKENS
     max_pages_sample: int = DEFAULT_MAX_PAGES_SAMPLE
-    model: str = DEFAULT_MODEL
     inbox_dir: str = "inbox"
     converted_dir: str = "converted"
     tree_index_dir: str = "tree_index"
@@ -47,9 +58,14 @@ class IngestSettings:
 @dataclass
 class Config:
     store_path: str = DEFAULT_STORE_PATH
-    oauth: OAuthConfig = field(default_factory=OAuthConfig)
+    llm: LLMConfig = field(default_factory=LLMConfig)
     ingest: IngestSettings = field(default_factory=IngestSettings)
     version: str = "1.0"
+    
+    # Backwards compatibility
+    @property
+    def oauth(self) -> LLMConfig:
+        return self.llm
 
     @property
     def store_root(self) -> Path:
@@ -84,11 +100,17 @@ class Config:
 
     @classmethod
     def from_dict(cls, data: dict) -> "Config":
-        oauth_data = data.get("oauth", {})
+        # Support both "llm" (new) and "oauth" (legacy) keys
+        llm_data = data.get("llm", data.get("oauth", {}))
         ingest_data = data.get("ingest", {})
+        
+        # Handle legacy "model" in ingest -> move to llm
+        if "model" in ingest_data and "model" not in llm_data:
+            llm_data["model"] = ingest_data.pop("model")
+        
         return cls(
             store_path=data.get("store_path", DEFAULT_STORE_PATH),
-            oauth=OAuthConfig(**oauth_data),
+            llm=LLMConfig(**llm_data),
             ingest=IngestSettings(**ingest_data),
             version=data.get("version", "1.0"),
         )
